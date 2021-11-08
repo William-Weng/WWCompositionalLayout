@@ -15,6 +15,9 @@ open class WWCompositionalLayout: NSObject {
     public typealias AnchorSetting = (edges: NSDirectionalRectEdge, absoluteOffset: CGPoint)
     public typealias FooterSetting = HeaderSetting
     
+    /// [可視的item移動情形](https://lickability.com/blog/getting-started-with-uicollectionviewcompositionallayout/)
+    public var visibleItemsInvalidationBlock: (([NSCollectionLayoutVisibleItem], CGPoint, NSCollectionLayoutEnvironment) -> Void)?
+    
     public struct HeaderSetting {
         let width: NSCollectionLayoutDimension
         let height: NSCollectionLayoutDimension
@@ -124,7 +127,7 @@ extension WWCompositionalLayout {
     ///   - height: [NSCollectionLayoutDimension](https://ali-akhtar.medium.com/uicollection-compositional-layout-part-3-7d6d66806979)
     ///   - interItemSpacing: [NSCollectionLayoutSpacing?](https://apestalk.github.io/2020/07/19/初探UICollectionViewCompositionalLayout/)
     ///   - scrollingDirection: [NSCollectionLayoutDirection](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/如何讓-static-cell-自動計算高度-cb493a522245)
-    /// - Returns: Self
+    /// - Returns: [Self](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/uicollectionviewcompositionallayout-常見排版範例-7656068783d9)
     public func setGroup(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, interItemSpacing: NSCollectionLayoutSpacing? = nil, scrollingDirection: NSCollectionLayoutDirection) -> Self {
         groupSetting = GroupSetting(width: width, height: height, interItemSpacing: interItemSpacing, scrollingDirection: scrollingDirection)
         return self
@@ -209,6 +212,10 @@ extension WWCompositionalLayout {
         
         if let header = headerMaker(with: headerSetting) { section.boundarySupplementaryItems.append(header) }
         if let footer = footerMaker(with: footerSetting) { section.boundarySupplementaryItems.append(footer) }
+        
+        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, point, environment in
+            self?.visibleItemsInvalidationBlock?(visibleItems, point, environment)
+        }
         
         return UICollectionViewCompositionalLayout(section: section)
     }
