@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "WWCompositionalLayout",
+        "repositoryURL": "https://github.com/William-Weng/WWCompositionalLayout.git",
+        "state": {
+          "branch": null,
+          "revision": "e62548eb0a88d8c64acb3182d85aeba58071bd15",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "WWPrint",
+        "repositoryURL": "https://github.com/William-Weng/WWPrint",
+        "state": {
+          "branch": null,
+          "revision": "e4ad2863717465f224aa676f10a3a7ff1df58f7c",
+          "version": "1.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
