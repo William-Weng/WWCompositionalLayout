@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D772BC6273A249C00D79AB4 /* WWCompositionalLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 3D772BC5273A249C00D79AB4 /* WWCompositionalLayout */; };
 		3DAC9C1927016E78006663C2 /* WWPrint in Frameworks */ = {isa = PBXBuildFile; productRef = 3DAC9C1827016E78006663C2 /* WWPrint */; };
 		3DBB925B2738CFD200E71DF4 /* Extension+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB92592738CFD200E71DF4 /* Extension+.swift */; };
 		3DBB925C2738CFD200E71DF4 /* Protocol+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB925A2738CFD200E71DF4 /* Protocol+.swift */; };
@@ -17,7 +18,6 @@
 		3DBB92692738D00E00E71DF4 /* MyCollectionReusableDecoration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB92622738D00E00E71DF4 /* MyCollectionReusableDecoration.swift */; };
 		3DBB926A2738D00E00E71DF4 /* MyCollectionReusableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB92632738D00E00E71DF4 /* MyCollectionReusableHeader.swift */; };
 		3DBB926B2738D00E00E71DF4 /* MyCollectionReusableBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBB92642738D00E00E71DF4 /* MyCollectionReusableBadge.swift */; };
-		3DBB92722738EEF000E71DF4 /* WWCompositionalLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 3DBB92712738EEF000E71DF4 /* WWCompositionalLayout */; };
 		3DBCD87426F198EF00522E3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBCD87326F198EF00522E3B /* AppDelegate.swift */; };
 		3DBCD87826F198EF00522E3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBCD87726F198EF00522E3B /* ViewController.swift */; };
 		3DBCD87B26F198EF00522E3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DBCD87926F198EF00522E3B /* Main.storyboard */; };
@@ -49,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DBB92722738EEF000E71DF4 /* WWCompositionalLayout in Frameworks */,
+				3D772BC6273A249C00D79AB4 /* WWCompositionalLayout in Frameworks */,
 				3DAC9C1927016E78006663C2 /* WWPrint in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,8 +99,8 @@
 		3DBCD87226F198EF00522E3B /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				3DBB92582738CFC000E71DF4 /* Utility */,
 				3DBCD88A26F1995100522E3B /* Setting */,
+				3DBB92582738CFC000E71DF4 /* Utility */,
 				3DBCD88926F1994500522E3B /* Material */,
 				3DBCD88826F1993200522E3B /* Storyboard */,
 				3DBCD88726F1992200522E3B /* ViewController */,
@@ -161,7 +161,7 @@
 			name = Example;
 			packageProductDependencies = (
 				3DAC9C1827016E78006663C2 /* WWPrint */,
-				3DBB92712738EEF000E71DF4 /* WWCompositionalLayout */,
+				3D772BC5273A249C00D79AB4 /* WWCompositionalLayout */,
 			);
 			productName = Example;
 			productReference = 3DBCD87026F198EF00522E3B /* Example.app */;
@@ -192,7 +192,7 @@
 			mainGroup = 3DBCD86726F198EF00522E3B;
 			packageReferences = (
 				3DAC9C1727016E78006663C2 /* XCRemoteSwiftPackageReference "WWPrint" */,
-				3DBB92702738EEF000E71DF4 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */,
+				3D772BC4273A249C00D79AB4 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */,
 			);
 			productRefGroup = 3DBCD87126F198EF00522E3B /* Products */;
 			projectDirPath = "";
@@ -308,7 +308,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -363,7 +363,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -437,6 +437,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3D772BC4273A249C00D79AB4 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/William-Weng/WWCompositionalLayout.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 		3DAC9C1727016E78006663C2 /* XCRemoteSwiftPackageReference "WWPrint" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/William-Weng/WWPrint";
@@ -445,26 +453,18 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		3DBB92702738EEF000E71DF4 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/William-Weng/WWCompositionalLayout.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3D772BC5273A249C00D79AB4 /* WWCompositionalLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D772BC4273A249C00D79AB4 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */;
+			productName = WWCompositionalLayout;
+		};
 		3DAC9C1827016E78006663C2 /* WWPrint */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3DAC9C1727016E78006663C2 /* XCRemoteSwiftPackageReference "WWPrint" */;
 			productName = WWPrint;
-		};
-		3DBB92712738EEF000E71DF4 /* WWCompositionalLayout */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3DBB92702738EEF000E71DF4 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */;
-			productName = WWCompositionalLayout;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -4,7 +4,9 @@
 //
 //  Created by William.Weng on 2021/11/11.
 //
+
 import UIKit
+import WWPrint
 
 open class WWCompositionalLayout: NSObject {
     
@@ -15,7 +17,6 @@ open class WWCompositionalLayout: NSObject {
     public typealias AnchorSetting = (edges: NSDirectionalRectEdge, absoluteOffset: CGPoint)
     public typealias FooterSetting = HeaderSetting
     
-    /// [可視的item移動情形](https://lickability.com/blog/getting-started-with-uicollectionviewcompositionallayout/)
     public var visibleItemsInvalidationBlock: (([NSCollectionLayoutVisibleItem], CGPoint, NSCollectionLayoutEnvironment) -> Void)?
     
     public struct HeaderSetting {
@@ -197,7 +198,7 @@ extension WWCompositionalLayout {
         return self
     }
     
-    /// 產生UICollectionViewCompositionalLayout
+    /// [產生UICollectionViewCompositionalLayout](https://lickability.com/blog/getting-started-with-uicollectionviewcompositionallayout/)
     /// - Returns: UICollectionViewCompositionalLayout?
     public func build() -> UICollectionViewCompositionalLayout? {
         
@@ -212,10 +213,8 @@ extension WWCompositionalLayout {
         
         if let header = headerMaker(with: headerSetting) { section.boundarySupplementaryItems.append(header) }
         if let footer = footerMaker(with: footerSetting) { section.boundarySupplementaryItems.append(footer) }
-        
-        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, point, environment in
-            self?.visibleItemsInvalidationBlock?(visibleItems, point, environment)
-        }
+                
+        section.visibleItemsInvalidationHandler = self.visibleItemsInvalidationBlock
         
         return UICollectionViewCompositionalLayout(section: section)
     }
@@ -231,7 +230,7 @@ extension WWCompositionalLayout {
             cleanAllSetting()
             multipleGroups = []
         }
-
+        
         guard let group = groupMaker(with: groupSetting, subitems: multipleGroups),
               let section = sectionMaker(with: sectionSetting, group: group)
         else {
@@ -240,7 +239,9 @@ extension WWCompositionalLayout {
 
         if let header = headerMaker(with: headerSetting) { section.boundarySupplementaryItems.append(header) }
         if let footer = footerMaker(with: footerSetting) { section.boundarySupplementaryItems.append(footer) }
-
+        
+        section.visibleItemsInvalidationHandler = self.visibleItemsInvalidationBlock
+        
         return UICollectionViewCompositionalLayout(section: section)
     }
 }
@@ -334,7 +335,7 @@ extension WWCompositionalLayout {
         section.contentInsets = setting.contentInsets
         
         if let decoration = decorationMaker(with: decorationSetting) { section.decorationItems = [decoration] }
-        
+                
         return section
     }
     

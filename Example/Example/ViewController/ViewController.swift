@@ -19,7 +19,6 @@ final class ViewController: UIViewController {
     private let backgroundInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
     private let firstBadgeSetting: WWCompositionalLayout.BadgeSetting = (key: "Badge", size: (width: .absolute(20), height: .absolute(20)), zIndex: 100,
 containerAnchor: (edges: [.top, .leading], absoluteOffset: CGPoint(x: 10, y: 10)), itemAnchor: (edges: [.bottom, .trailing], absoluteOffset: CGPoint(x: 0, y: 0)))
-    
     private var currentLayoutIndex = 0
     
     enum LayoutType: Int, CaseIterable {
@@ -34,11 +33,13 @@ containerAnchor: (edges: [.top, .leading], absoluteOffset: CGPoint(x: 10, y: 10)
     override func viewDidLoad() {
         super.viewDidLoad()
         initSetting()
+        itemSizeAnimation()
     }
     
     /// 更新Layout
     /// - Parameter sender: UIBarButtonItem
     @IBAction func changeLayout(_ sender: UIBarButtonItem) {
+        
         currentLayoutIndex += 1
         if (currentLayoutIndex > (LayoutType.allCases.count - 1)) { currentLayoutIndex = 0 }
         initSetting()
@@ -79,6 +80,10 @@ extension ViewController: UICollectionViewDataSource {
         
         return badge
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        wwPrint(indexPath)
+    }
 }
 
 // MARK: UICollectionViewDataSource
@@ -115,6 +120,24 @@ extension ViewController {
         case .complexGroup: return complexGroupLayout()
         }
     }
+    
+    /// item的大小動畫展示 (背景也會跟著第一個變小，很奇怪，待測)
+    private func itemSizeAnimation(for type: LayoutType = .bookshelf) {
+        
+        WWCompositionalLayout.shared.visibleItemsInvalidationBlock = { (items, offset, environment) in
+            
+            guard let layoutType = LayoutType(rawValue: self.currentLayoutIndex), layoutType == type else { return }
+            
+            items.forEach { item in
+                
+                let distanceFromCenter = abs((item.frame.midX - offset.x) - environment.container.contentSize.width / 2.0)
+                let scaleRange: (min: CGFloat, max: CGFloat) = (0.7, 1.1)
+                let scale = max(scaleRange.max - (distanceFromCenter / environment.container.contentSize.width), scaleRange.min)
+                
+                item.transform = CGAffineTransform(scaleX: scale, y: scale)
+            }
+        }
+    }
 }
 
 // MARK: - CompositionalLayout
@@ -123,7 +146,7 @@ extension ViewController {
     /// 長得像UITableView的Layout
     /// - Returns: UICollectionViewCompositionalLayout?
     private func tableViewLayout() -> UICollectionViewCompositionalLayout? {
-        
+                
         let layout = WWCompositionalLayout.shared
             .addItem(width: .fractionalWidth(1.0), height: .absolute(120), contentInsets: edgeInsets, badgeSetting: firstBadgeSetting)
             .setDecoration(with: backgroundInsets)
@@ -162,8 +185,8 @@ extension ViewController {
         
         let layout = WWCompositionalLayout.shared
             .addItem(width: .fractionalWidth(1.0), height: .absolute(120), contentInsets: edgeInsets, badgeSetting: nil)
-            .setDecoration(with: backgroundInsets)
-            .setGroup(width: .fractionalWidth(1/count), height: .absolute(120), scrollingDirection: .vertical)
+            // .setDecoration(with: backgroundInsets)
+            .setGroup(width: .fractionalWidth(1.0 / count), height: .absolute(120), scrollingDirection: .vertical)
             .setSection(with: .continuousGroupLeadingBoundary, contentInsets: contentInsets)
             .setHeader(width: .fractionalWidth(1.0), height: .absolute(16))
             .setFooter(width: .fractionalWidth(0.5), height: .absolute(16))
