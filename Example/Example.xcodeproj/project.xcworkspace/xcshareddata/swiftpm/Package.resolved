@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "wwcompositionallayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/William-Weng/WWCompositionalLayout",
+      "state" : {
+        "revision" : "be3d9cf708aad46a84595496c7b10433960c6368",
+        "version" : "1.1.2"
+      }
+    },
+    {
       "identity" : "wwprint",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWPrint",

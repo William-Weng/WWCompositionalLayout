@@ -23,6 +23,7 @@
 		3DBCD87D26F198F300522E3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DBCD87C26F198F300522E3B /* Assets.xcassets */; };
 		3DBCD88026F198F300522E3B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DBCD87E26F198F300522E3B /* LaunchScreen.storyboard */; };
 		817E8B202B5E042200A96B83 /* WWCompositionalLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 817E8B1F2B5E042200A96B83 /* WWCompositionalLayout */; };
+		817E8B232B5E07A900A96B83 /* WWCompositionalLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 817E8B222B5E07A900A96B83 /* WWCompositionalLayout */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +43,6 @@
 		3DBCD87C26F198F300522E3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3DBCD87F26F198F300522E3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3DBCD88126F198F300522E3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		817E8B1D2B5E03E000A96B83 /* WWCompositionalLayout */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = WWCompositionalLayout; path = ../WWCompositionalLayout; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +51,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				817E8B202B5E042200A96B83 /* WWCompositionalLayout in Frameworks */,
+				817E8B232B5E07A900A96B83 /* WWCompositionalLayout in Frameworks */,
 				3DAC9C1927016E78006663C2 /* WWPrint in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,7 +85,6 @@
 		3DBCD86726F198EF00522E3B = {
 			isa = PBXGroup;
 			children = (
-				817E8B1C2B5E03E000A96B83 /* Packages */,
 				3DBCD87226F198EF00522E3B /* Example */,
 				3DBCD87126F198EF00522E3B /* Products */,
 				817E8B1E2B5E042200A96B83 /* Frameworks */,
@@ -146,14 +146,6 @@
 			name = Setting;
 			sourceTree = "<group>";
 		};
-		817E8B1C2B5E03E000A96B83 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				817E8B1D2B5E03E000A96B83 /* WWCompositionalLayout */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		817E8B1E2B5E042200A96B83 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -180,6 +172,7 @@
 			packageProductDependencies = (
 				3DAC9C1827016E78006663C2 /* WWPrint */,
 				817E8B1F2B5E042200A96B83 /* WWCompositionalLayout */,
+				817E8B222B5E07A900A96B83 /* WWCompositionalLayout */,
 			);
 			productName = Example;
 			productReference = 3DBCD87026F198EF00522E3B /* Example.app */;
@@ -211,6 +204,7 @@
 			mainGroup = 3DBCD86726F198EF00522E3B;
 			packageReferences = (
 				3DAC9C1727016E78006663C2 /* XCRemoteSwiftPackageReference "WWPrint" */,
+				817E8B212B5E07A800A96B83 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */,
 			);
 			productRefGroup = 3DBCD87126F198EF00522E3B /* Products */;
 			projectDirPath = "";
@@ -463,6 +457,14 @@
 				minimumVersion = 1.3.0;
 			};
 		};
+		817E8B212B5E07A800A96B83 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/William-Weng/WWCompositionalLayout";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -473,6 +475,11 @@
 		};
 		817E8B1F2B5E042200A96B83 /* WWCompositionalLayout */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = WWCompositionalLayout;
+		};
+		817E8B222B5E07A900A96B83 /* WWCompositionalLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 817E8B212B5E07A800A96B83 /* XCRemoteSwiftPackageReference "WWCompositionalLayout" */;
 			productName = WWCompositionalLayout;
 		};
 /* End XCSwiftPackageProductDependency section */
