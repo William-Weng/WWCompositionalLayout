@@ -1,25 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "WWCompositionalLayout",
-        "repositoryURL": "https://github.com/William-Weng/WWCompositionalLayout.git",
-        "state": {
-          "branch": null,
-          "revision": "d66c9fb2f497dcebeef1f657b52f65c267033f88",
-          "version": "1.1.0"
-        }
-      },
-      {
-        "package": "WWPrint",
-        "repositoryURL": "https://github.com/William-Weng/WWPrint",
-        "state": {
-          "branch": null,
-          "revision": "e4ad2863717465f224aa676f10a3a7ff1df58f7c",
-          "version": "1.0.0"
-        }
+  "pins" : [
+    {
+      "identity" : "wwprint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/William-Weng/WWPrint",
+      "state" : {
+        "revision" : "0acf1057863faea81c3ded2057c21b09c3435435",
+        "version" : "1.3.0"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }

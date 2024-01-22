@@ -12,67 +12,37 @@ open class WWCompositionalLayout: NSObject {
     
     public static let shared = WWCompositionalLayout()
     
-    public typealias BadgeSetting = (key: String, size: ItemSize, zIndex: Int, containerAnchor: AnchorSetting, itemAnchor: AnchorSetting)
-    public typealias ItemSize = (width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension)
-    public typealias AnchorSetting = (edges: NSDirectionalRectEdge, absoluteOffset: CGPoint)
-    public typealias FooterSetting = HeaderSetting
-    
     public var visibleItemsInvalidationBlock: (([NSCollectionLayoutVisibleItem], CGPoint, NSCollectionLayoutEnvironment) -> Void)?
     
-    public struct HeaderSetting {
-        let width: NSCollectionLayoutDimension
-        let height: NSCollectionLayoutDimension
-        let kind: ReusableSupplementaryViewKind
-        let alignment: NSRectAlignment
-        let absoluteOffset: CGPoint
-    }
+    private var itemSettings: [ItemSetting] = []
+    private var groupSetting: GroupSetting?
+    private var sectionSetting: SectionSetting?
+    private var headerSetting: HeaderSetting?
+    private var footerSetting: FooterSetting?
+    private var decorationSetting: DecorationSetting?
+    private var multipleGroups: [NSCollectionLayoutGroup] = []
+}
+
+// MARK: - typealias
+public extension WWCompositionalLayout {
     
-    public struct ItemSetting {
-        let width: NSCollectionLayoutDimension
-        let height: NSCollectionLayoutDimension
-        let contentInsets: NSDirectionalEdgeInsets?
-        let badgeSetting: BadgeSetting?
-    }
-    
-    public struct GroupSetting {
-        
-        let width: NSCollectionLayoutDimension
-        let height: NSCollectionLayoutDimension
-        let interItemSpacing: NSCollectionLayoutSpacing?
-        let scrollingDirection: NSCollectionLayoutDirection?
-        
-        public init(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, interItemSpacing: NSCollectionLayoutSpacing? = nil, scrollingDirection: NSCollectionLayoutDirection? = nil) {
-            self.width = width
-            self.height = height
-            self.interItemSpacing = interItemSpacing
-            self.scrollingDirection = scrollingDirection
-        }
-    }
-    
-    public struct SectionSetting {
-        
-        let scrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior
-        let contentInsets: NSDirectionalEdgeInsets
-        
-        public init(scrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior, contentInsets: NSDirectionalEdgeInsets) {
-            self.scrollingBehavior = scrollingBehavior
-            self.contentInsets = contentInsets
-        }
-    }
-    
-    public struct DecorationSetting {
-        let kind: ReusableSupplementaryViewKind
-        let contentInsets: NSDirectionalEdgeInsets
-    }
+    typealias BadgeSetting = (key: String, size: ItemSize, zIndex: Int, containerAnchor: AnchorSetting, itemAnchor: AnchorSetting)
+    typealias ItemSize = (width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension)
+    typealias AnchorSetting = (edges: NSDirectionalRectEdge, absoluteOffset: CGPoint)
+    typealias FooterSetting = HeaderSetting
+}
+
+// MARK: - enum
+public extension WWCompositionalLayout {
     
     /// 滾動的方向
-    public enum NSCollectionLayoutDirection {
+    enum NSCollectionLayoutDirection {
         case horizontal
         case vertical
     }
     
     /// UICollectionReusableView的Kind (自定義文字)
-    public enum ReusableSupplementaryViewKind: CustomStringConvertible {
+    enum ReusableSupplementaryViewKind: CustomStringConvertible {
         
         public var description: String { return toString() }
         
@@ -94,18 +64,60 @@ open class WWCompositionalLayout: NSObject {
             }
         }
     }
-    
-    private var itemSettings: [ItemSetting] = []
-    private var groupSetting: GroupSetting?
-    private var sectionSetting: SectionSetting?
-    private var headerSetting: HeaderSetting?
-    private var footerSetting: FooterSetting?
-    private var decorationSetting: DecorationSetting?
-    private var multipleGroups: [NSCollectionLayoutGroup] = []
 }
 
-// MARK: - CompositionalLayout.Setting (class function)
-extension WWCompositionalLayout {
+// MARK: - struct
+public extension WWCompositionalLayout {
+    
+    struct HeaderSetting {
+        let width: NSCollectionLayoutDimension
+        let height: NSCollectionLayoutDimension
+        let kind: ReusableSupplementaryViewKind
+        let alignment: NSRectAlignment
+        let absoluteOffset: CGPoint
+    }
+    
+    struct ItemSetting {
+        let width: NSCollectionLayoutDimension
+        let height: NSCollectionLayoutDimension
+        let contentInsets: NSDirectionalEdgeInsets?
+        let badgeSetting: BadgeSetting?
+    }
+    
+    struct GroupSetting {
+        
+        let width: NSCollectionLayoutDimension
+        let height: NSCollectionLayoutDimension
+        let interItemSpacing: NSCollectionLayoutSpacing?
+        let scrollingDirection: NSCollectionLayoutDirection?
+        
+        public init(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, interItemSpacing: NSCollectionLayoutSpacing? = nil, scrollingDirection: NSCollectionLayoutDirection? = nil) {
+            self.width = width
+            self.height = height
+            self.interItemSpacing = interItemSpacing
+            self.scrollingDirection = scrollingDirection
+        }
+    }
+    
+    struct SectionSetting {
+        
+        let scrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior
+        let contentInsets: NSDirectionalEdgeInsets
+        
+        public init(scrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior, contentInsets: NSDirectionalEdgeInsets) {
+            self.scrollingBehavior = scrollingBehavior
+            self.contentInsets = contentInsets
+        }
+    }
+    
+    struct DecorationSetting {
+        let kind: ReusableSupplementaryViewKind
+        let contentInsets: NSDirectionalEdgeInsets
+    }
+}
+
+// MARK: - CompositionalLayout.Setting (function)
+public extension WWCompositionalLayout {
     
     /// [設定item的size (可以有很多個)](https://www.donnywals.com/using-compositional-collection-view-layouts-in-ios-13/)
     /// - Parameters:
@@ -114,7 +126,7 @@ extension WWCompositionalLayout {
     ///   - contentInsets: [NSDirectionalEdgeInsets?](https://medium.com/flawless-app-stories/all-what-you-need-to-know-about-uicollectionviewcompositionallayout-f3b2f590bdbe)
     ///   - badgeSetting: [小紅點的相關設定](https://stackoverflow.com/questions/60112393/section-header-zindex-in-uicollectionview-compositionallayout-ios-13)
     /// - Returns: [Self](https://medium.com/@Anantha1992/stretchable-header-view-in-uicollectionview-swift-5-ios-a14a25dcd383)
-    public func addItem(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, contentInsets: NSDirectionalEdgeInsets? = nil, badgeSetting: BadgeSetting? = nil) -> Self {
+    func addItem(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, contentInsets: NSDirectionalEdgeInsets? = nil, badgeSetting: BadgeSetting? = nil) -> Self {
         
         let setting = ItemSetting(width: width, height: height, contentInsets: contentInsets, badgeSetting: badgeSetting)
         itemSettings.append(setting)
@@ -129,7 +141,7 @@ extension WWCompositionalLayout {
     ///   - interItemSpacing: [NSCollectionLayoutSpacing?](https://apestalk.github.io/2020/07/19/初探UICollectionViewCompositionalLayout/)
     ///   - scrollingDirection: [NSCollectionLayoutDirection](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/如何讓-static-cell-自動計算高度-cb493a522245)
     /// - Returns: [Self](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/uicollectionviewcompositionallayout-常見排版範例-7656068783d9)
-    public func setGroup(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, interItemSpacing: NSCollectionLayoutSpacing? = nil, scrollingDirection: NSCollectionLayoutDirection) -> Self {
+    func setGroup(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, interItemSpacing: NSCollectionLayoutSpacing? = nil, scrollingDirection: NSCollectionLayoutDirection) -> Self {
         groupSetting = GroupSetting(width: width, height: height, interItemSpacing: interItemSpacing, scrollingDirection: scrollingDirection)
         return self
     }
@@ -139,7 +151,7 @@ extension WWCompositionalLayout {
     ///   - scrollingBehavior: 滾動的方向
     ///   - contentInsets: NSDirectionalEdgeInsets
     /// - Returns: Self
-    public func setSection(with scrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior = .none, contentInsets: NSDirectionalEdgeInsets) -> Self {
+    func setSection(with scrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior = .none, contentInsets: NSDirectionalEdgeInsets) -> Self {
         sectionSetting = SectionSetting(scrollingBehavior: scrollingBehavior, contentInsets: contentInsets)
         return self
     }
@@ -150,7 +162,7 @@ extension WWCompositionalLayout {
     ///   - height: NSCollectionLayoutDimension
     ///   - absoluteOffset: CGPoint
     /// - Returns: Self
-    public func setHeader(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, absoluteOffset: CGPoint = .zero) -> Self {
+    func setHeader(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, absoluteOffset: CGPoint = .zero) -> Self {
         headerSetting = HeaderSetting(width: width, height: height, kind: .header, alignment: .top, absoluteOffset: absoluteOffset)
         return self
     }
@@ -161,7 +173,7 @@ extension WWCompositionalLayout {
     ///   - height: NSCollectionLayoutDimension
     ///   - absoluteOffset: CGPoint
     /// - Returns: Self
-    public func setFooter(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, absoluteOffset: CGPoint = .zero) -> Self {
+    func setFooter(width: NSCollectionLayoutDimension, height: NSCollectionLayoutDimension, absoluteOffset: CGPoint = .zero) -> Self {
         footerSetting = FooterSetting(width: width, height: height, kind: .footer, alignment: .bottom, absoluteOffset: absoluteOffset)
         return self
     }
@@ -170,14 +182,14 @@ extension WWCompositionalLayout {
     /// - Parameters:
     ///   - contentInsets: NSDirectionalEdgeInsets
     /// - Returns: NSCollectionLayoutDecorationItem
-    public func setDecoration(with contentInsets: NSDirectionalEdgeInsets = .zero) -> Self {
+    func setDecoration(with contentInsets: NSDirectionalEdgeInsets = .zero) -> Self {
         decorationSetting = DecorationSetting(kind: .decoration, contentInsets: contentInsets)
         return self
     }
     
     /// 產生複合式的LayoutGroup
     /// - Returns: NSCollectionLayoutGroup?
-    public func groupLayoutMaker() -> NSCollectionLayoutGroup? {
+    func groupLayoutMaker() -> NSCollectionLayoutGroup? {
         
         defer { cleanAllSetting() }
         
@@ -193,14 +205,14 @@ extension WWCompositionalLayout {
     /// 加入複合式的LayoutGroup
     /// - Parameter group: NSCollectionLayoutGroup
     /// - Returns: Self
-    public func addGroup(with group: NSCollectionLayoutGroup) -> Self {
+    func addGroup(with group: NSCollectionLayoutGroup) -> Self {
         multipleGroups.append(group)
         return self
     }
     
     /// [產生UICollectionViewCompositionalLayout](https://lickability.com/blog/getting-started-with-uicollectionviewcompositionallayout/)
     /// - Returns: UICollectionViewCompositionalLayout?
-    public func build() -> UICollectionViewCompositionalLayout? {
+    func build() -> UICollectionViewCompositionalLayout? {
         
         defer { cleanAllSetting() }
         
@@ -224,7 +236,7 @@ extension WWCompositionalLayout {
     ///   - groupSetting: GroupSetting
     ///   - sectionSetting: SectionSetting
     /// - Returns: UICollectionViewCompositionalLayout?
-    public func build(with groupSetting: GroupSetting, sectionSetting: SectionSetting) -> UICollectionViewCompositionalLayout? {
+    func build(with groupSetting: GroupSetting, sectionSetting: SectionSetting) -> UICollectionViewCompositionalLayout? {
 
         defer {
             cleanAllSetting()
@@ -246,13 +258,13 @@ extension WWCompositionalLayout {
     }
 }
 
-// MARK: - CompositionalLayout.WW (private class function)
-extension WWCompositionalLayout {
+// MARK: - WWCompositionalLayout (private function)
+private extension WWCompositionalLayout {
     
     /// [NSCollectionLayoutSize] => [NSCollectionLayoutItem]
     /// - Parameter setting: [ItemSetting]
     /// - Returns: [NSCollectionLayoutItem]?
-    private func subItemsMaker(with setting: [ItemSetting]) -> [NSCollectionLayoutItem]? {
+    func subItemsMaker(with setting: [ItemSetting]) -> [NSCollectionLayoutItem]? {
         
         guard !setting.isEmpty else { return nil }
         
@@ -278,7 +290,7 @@ extension WWCompositionalLayout {
     /// 產生小紅點 => NSCollectionLayoutSupplementaryItem
     /// - Parameter setting: BadgeSetting?
     /// - Returns: NSCollectionLayoutSupplementaryItem?
-    private func badgeMaker(with setting: BadgeSetting?) -> NSCollectionLayoutSupplementaryItem? {
+    func badgeMaker(with setting: BadgeSetting?) -> NSCollectionLayoutSupplementaryItem? {
         
         guard let setting = setting else { return nil }
         
@@ -297,7 +309,7 @@ extension WWCompositionalLayout {
     ///   - setting: GroupSetting?
     ///   - subitems: [NSCollectionLayoutItem]
     /// - Returns: NSCollectionLayoutGroup?
-    private func groupMaker(with setting: GroupSetting?, subitems: [NSCollectionLayoutItem]) -> NSCollectionLayoutGroup? {
+    func groupMaker(with setting: GroupSetting?, subitems: [NSCollectionLayoutItem]) -> NSCollectionLayoutGroup? {
         
         guard let setting = setting,
               let scrollingDirection = setting.scrollingDirection,
@@ -323,7 +335,7 @@ extension WWCompositionalLayout {
     ///   - setting: SectionSetting?
     ///   - group: NSCollectionLayoutGroup
     /// - Returns: NSCollectionLayoutSection?
-    private func sectionMaker(with setting: SectionSetting?, group: NSCollectionLayoutGroup) -> NSCollectionLayoutSection? {
+    func sectionMaker(with setting: SectionSetting?, group: NSCollectionLayoutGroup) -> NSCollectionLayoutSection? {
         
         guard let setting = setting,
               let section = Optional.some(NSCollectionLayoutSection(group: group))
@@ -342,7 +354,7 @@ extension WWCompositionalLayout {
     /// 將header的設定 => NSCollectionLayoutBoundarySupplementaryItem
     /// - Parameter setting: HeaderSetting
     /// - Returns: NSCollectionLayoutBoundarySupplementaryItem?
-    private func headerMaker(with setting: HeaderSetting?) -> NSCollectionLayoutBoundarySupplementaryItem? {
+    func headerMaker(with setting: HeaderSetting?) -> NSCollectionLayoutBoundarySupplementaryItem? {
         
         guard let setting = setting else { return nil }
         
@@ -355,11 +367,11 @@ extension WWCompositionalLayout {
     /// 將footer的設定 => NSCollectionLayoutBoundarySupplementaryItem
     /// - Parameter setting: HeaderSetting
     /// - Returns: NSCollectionLayoutBoundarySupplementaryItem?
-    private func footerMaker(with setting: FooterSetting?) -> NSCollectionLayoutBoundarySupplementaryItem? { return headerMaker(with: setting) }
+    func footerMaker(with setting: FooterSetting?) -> NSCollectionLayoutBoundarySupplementaryItem? { return headerMaker(with: setting) }
     
     /// 將背景圖的設定 => NSCollectionLayoutDecorationItem
     /// - Returns: NSCollectionLayoutDecorationItem?
-    private func decorationMaker(with setting: DecorationSetting?) -> NSCollectionLayoutDecorationItem? {
+    func decorationMaker(with setting: DecorationSetting?) -> NSCollectionLayoutDecorationItem? {
         
         guard let setting = setting else { return nil }
         
@@ -370,7 +382,7 @@ extension WWCompositionalLayout {
     }
     
     /// 清除所有設定
-    private func cleanAllSetting() {
+    func cleanAllSetting() {
         itemSettings = []
         groupSetting = nil
         sectionSetting = nil
