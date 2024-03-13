@@ -14,8 +14,7 @@ let package = Package(
     dependencies: [
     ],
     targets: [
-        .target(name: "WWCompositionalLayout", dependencies: []),
-        .testTarget(name: "WWCompositionalLayoutTests", dependencies: ["WWCompositionalLayout"]),
+        .target(name: "WWCompositionalLayout", resources: [.copy("Privacy")]),
     ],
     swiftLanguageVersions: [
         .v5

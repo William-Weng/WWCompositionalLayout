@@ -1,9 +1,9 @@
 # WWCompositionalLayout
 [![Swift-5.6](https://img.shields.io/badge/Swift-5.6-orange.svg?style=flat)](https://developer.apple.com/swift/) [![iOS-14.0](https://img.shields.io/badge/iOS-14.0-pink.svg?style=flat)](https://developer.apple.com/swift/) [![Swift Package Manager-SUCCESS](https://img.shields.io/badge/Swift_Package_Manager-SUCCESS-blue.svg?style=flat)](https://developer.apple.com/swift/) [![LICENSE](https://img.shields.io/badge/LICENSE-MIT-yellow.svg?style=flat)](https://developer.apple.com/swift/)
 
-A simple integrated version of iOS 13 [Compositional Layout](https://developer.apple.com/documentation/uikit/views_and_controls/collection_views/layouts), modified into a way similar to [Functional Programming](https://ithelp.ithome.com.tw/articles/10233399) to generate UICollectionViewCompositionalLayout.
-
-iOS 13 [Compositional Layout](https://www.appcoda.com.tw/compositional-layout/)的簡單整合版，修改成類似[Functional Programming](https://ithelp.ithome.com.tw/articles/10233399)的方式來生成UICollectionViewCompositionalLayout。
+### [Introduction - 簡介](https://swiftpackageindex.com/William-Weng)
+- A simple integrated version of iOS 13 [Compositional Layout](https://developer.apple.com/documentation/uikit/views_and_controls/collection_views/layouts), modified into a way similar to [Functional Programming](https://ithelp.ithome.com.tw/articles/10233399) to generate UICollectionViewCompositionalLayout.
+- iOS 13 [Compositional Layout](https://www.appcoda.com.tw/compositional-layout/)的簡單整合版，修改成類似[Functional Programming](https://ithelp.ithome.com.tw/articles/10233399)的方式來生成UICollectionViewCompositionalLayout。
 
 ![](./Example.gif)
 
@@ -13,6 +13,20 @@ dependencies: [
     .package(url: "https://github.com/William-Weng/WWCompositionalLayout.git", .upToNextMajor(from: "1.1.0"))
 ]
 ```
+
+### Function - 可用函式
+|函式|功能|
+|-|-|
+|addItem(width:height:contentInsets:badgeSetting:)|設定item的size (可以有很多個)|
+|setGroup(width:height:interItemSpacing:scrollingDirection:)|設定group的size (只會有一個)|
+|setSection(with:contentInsets:)|設定section的size (只會有一個)|
+|setHeader(width:height:absoluteOffset:)|header的大小 (最上方的View)|
+|setFooter(width:height:absoluteOffset:)|footer的大小 (最下方的View)|
+|setDecoration(with:)|設定背景圖的View|
+|groupLayoutMaker()|產生複合式的LayoutGroup|
+|addGroup(with:)|加入複合式的LayoutGroup|
+|build()|產生UICollectionViewCompositionalLayout|
+|build(with:sectionSetting:)|產生複合式Group的UICollectionViewCompositionalLayout|
 
 ### Example
 ```swift
