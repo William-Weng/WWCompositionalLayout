@@ -36,17 +36,6 @@ import WWCompositionalLayout
 
 final class ViewController: UIViewController {
     
-    @IBOutlet weak var myCollectionView: UICollectionView!
-    
-    private let badgeViewKey = "Badge"
-    private let contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-    private let edgeInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
-    private let backgroundInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
-    private let firstBadgeSetting: WWCompositionalLayout.BadgeSetting = (key: "Badge", size: (width: .absolute(20), height: .absolute(20)), zIndex: 100,
-containerAnchor: (edges: [.top, .leading], absoluteOffset: CGPoint(x: 10, y: 10)), itemAnchor: (edges: [.bottom, .trailing], absoluteOffset: CGPoint(x: 0, y: 0)))
-    
-    private var currentLayoutIndex = 0
-    
     enum LayoutType: Int, CaseIterable {
         case tableView
         case photoAlbum
@@ -56,21 +45,30 @@ containerAnchor: (edges: [.top, .leading], absoluteOffset: CGPoint(x: 10, y: 10)
         case complexGroup
     }
     
+    @IBOutlet weak var myCollectionView: UICollectionView!
+    
+    private let badgeViewKey = "Badge"
+    private let contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+    private let edgeInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+    private let backgroundInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+    private let firstBadgeSetting: WWCompositionalLayout.BadgeSetting = (key: "Badge", size: (width: .absolute(20), height: .absolute(20)), zIndex: 100,
+containerAnchor: (edges: [.top, .leading], absoluteOffset: CGPoint(x: 10, y: 10)), itemAnchor: (edges: [.bottom, .trailing], absoluteOffset: CGPoint(x: 0, y: 0)))
+    private var currentLayoutIndex = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initSetting()
+        itemSizeAnimation()
     }
     
-    /// 更新Layout
-    /// - Parameter sender: UIBarButtonItem
     @IBAction func changeLayout(_ sender: UIBarButtonItem) {
+        
         currentLayoutIndex += 1
         if (currentLayoutIndex > (LayoutType.allCases.count - 1)) { currentLayoutIndex = 0 }
         initSetting()
     }
 }
 
-// MARK: UICollectionViewDataSource
 extension ViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int { return 10 }
@@ -104,16 +102,17 @@ extension ViewController: UICollectionViewDataSource {
         
         return badge
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        wwPrint(indexPath)
+    }
 }
 
-// MARK: UICollectionViewDataSource
 extension ViewController: UICollectionViewDelegate, UINavigationControllerDelegate {}
 
-// MARK: 小工具
-extension ViewController {
+private extension ViewController {
     
-    /// 初始化設定
-    private func initSetting() {
+    func initSetting() {
         
         guard let layoutType = LayoutType.allCases[safe: currentLayoutIndex],
               let layout = layoutMaker(with: layoutType)
@@ -126,10 +125,7 @@ extension ViewController {
         myCollectionView.setCollectionViewLayout(layout, animated: true)
     }
     
-    /// Layout選擇器
-    /// - Parameter type: LayoutType
-    /// - Returns: UICollectionViewCompositionalLayout?
-    private func layoutMaker(with type: LayoutType) -> UICollectionViewCompositionalLayout? {
+    func layoutMaker(with type: LayoutType) -> UICollectionViewCompositionalLayout? {
         
         switch type {
         case .tableView: return tableViewLayout()
@@ -140,15 +136,29 @@ extension ViewController {
         case .complexGroup: return complexGroupLayout()
         }
     }
+    
+    func itemSizeAnimation(for type: LayoutType = .bookshelf) {
+        
+        WWCompositionalLayout.shared.visibleItemsInvalidationBlock = { (items, offset, environment) in
+            
+            guard let layoutType = LayoutType(rawValue: self.currentLayoutIndex), layoutType == type else { return }
+            
+            items.forEach { item in
+                
+                let distanceFromCenter = abs((item.frame.midX - offset.x) - environment.container.contentSize.width / 2.0)
+                let scaleRange: (min: CGFloat, max: CGFloat) = (0.7, 1.1)
+                let scale = max(scaleRange.max - (distanceFromCenter / environment.container.contentSize.width), scaleRange.min)
+                
+                item.transform = CGAffineTransform(scaleX: scale, y: scale)
+            }
+        }
+    }
 }
 
-// MARK: - CompositionalLayout
-extension ViewController {
+private extension ViewController {
     
-    /// 長得像UITableView的Layout
-    /// - Returns: UICollectionViewCompositionalLayout?
-    private func tableViewLayout() -> UICollectionViewCompositionalLayout? {
-        
+    func tableViewLayout() -> UICollectionViewCompositionalLayout? {
+                
         let layout = WWCompositionalLayout.shared
             .addItem(width: .fractionalWidth(1.0), height: .absolute(120), contentInsets: edgeInsets, badgeSetting: firstBadgeSetting)
             .setDecoration(with: backgroundInsets)
@@ -160,10 +170,8 @@ extension ViewController {
         
         return layoutRegister(layout)
     }
-    
-    /// 長得像相簿的Layout
-    /// - Returns: UICollectionViewCompositionalLayout?
-    private func photoAlbumLayout() -> UICollectionViewCompositionalLayout? {
+
+    func photoAlbumLayout() -> UICollectionViewCompositionalLayout? {
         
         let layout = WWCompositionalLayout.shared
             .addItem(width: .fractionalWidth(1/3), height: .absolute(120), contentInsets: edgeInsets)
@@ -177,18 +185,15 @@ extension ViewController {
         return layoutRegister(layout)
     }
     
-    /// 長得像書櫃的Layout
-    /// - Parameter count: 一頁要顯示幾本
-    /// - Returns: UICollectionViewCompositionalLayout?
-    private func bookshelfLayout(with count: CGFloat = 4.0) -> UICollectionViewCompositionalLayout? {
+    func bookshelfLayout(with count: CGFloat = 4.0) -> UICollectionViewCompositionalLayout? {
         
         let mainScreenWidth = UIScreen.main.bounds.width
         let contentInsets = NSDirectionalEdgeInsets(top: 5, leading: mainScreenWidth/2 - mainScreenWidth/2/count, bottom: 5, trailing: mainScreenWidth/2/count)
         
         let layout = WWCompositionalLayout.shared
             .addItem(width: .fractionalWidth(1.0), height: .absolute(120), contentInsets: edgeInsets, badgeSetting: nil)
-            .setDecoration(with: backgroundInsets)
-            .setGroup(width: .fractionalWidth(1/count), height: .absolute(120), scrollingDirection: .vertical)
+            // .setDecoration(with: backgroundInsets)
+            .setGroup(width: .fractionalWidth(1.0 / count), height: .absolute(120), scrollingDirection: .vertical)
             .setSection(with: .continuousGroupLeadingBoundary, contentInsets: contentInsets)
             .setHeader(width: .fractionalWidth(1.0), height: .absolute(16))
             .setFooter(width: .fractionalWidth(0.5), height: .absolute(16))
@@ -197,9 +202,7 @@ extension ViewController {
         return layoutRegister(layout)
     }
     
-    /// 長得像自動販賣機的Layout
-    /// - Returns: UICollectionViewCompositionalLayout?
-    private func vendingMachineLayout() -> UICollectionViewCompositionalLayout? {
+    func vendingMachineLayout() -> UICollectionViewCompositionalLayout? {
         
         let layout = WWCompositionalLayout.shared
             .addItem(width: .fractionalWidth(1.0), height: .absolute(50), contentInsets: edgeInsets, badgeSetting: nil)
@@ -215,9 +218,7 @@ extension ViewController {
         return layoutRegister(layout)
     }
     
-    /// 動態高度的Layout
-    /// - Returns: UICollectionViewCompositionalLayout?
-    private func dynamicHeightLayout() -> UICollectionViewCompositionalLayout? {
+    func dynamicHeightLayout() -> UICollectionViewCompositionalLayout? {
         
         let layout = WWCompositionalLayout.shared
             .addItem(width: .fractionalWidth(1.0), height: .estimated(120), contentInsets: edgeInsets, badgeSetting: firstBadgeSetting)
@@ -231,9 +232,7 @@ extension ViewController {
         return layoutRegister(layout)
     }
     
-    /// 混合式的Layout
-    /// - Returns: UICollectionViewCompositionalLayout?
-    private func complexGroupLayout() -> UICollectionViewCompositionalLayout? {
+    func complexGroupLayout() -> UICollectionViewCompositionalLayout? {
         
         let groupSetting = WWCompositionalLayout.GroupSetting(width: .estimated(100), height: .absolute(200), interItemSpacing: .fixed(2), scrollingDirection: .vertical)
         let sectionSetting = WWCompositionalLayout.SectionSetting(scrollingBehavior: .continuous, contentInsets: .zero)
@@ -267,13 +266,9 @@ extension ViewController {
     }
 }
 
-// MARK: - CompositionalLayout
-extension ViewController {
+private extension ViewController {
     
-    /// 註冊CollectionReusableView
-    /// - Parameter layout:
-    /// - Returns: UICollectionViewLayout?
-    private func layoutRegister(_ layout: UICollectionViewCompositionalLayout?) -> UICollectionViewCompositionalLayout? {
+    func layoutRegister(_ layout: UICollectionViewCompositionalLayout?) -> UICollectionViewCompositionalLayout? {
         
         guard let layout = layout else { return nil }
         
